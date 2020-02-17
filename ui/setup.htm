@@ -21,7 +21,16 @@
         const sha1 = require("sha1")
         const fs = require("fs")
         const path = require("path")
-        const { screen } = require("electron")
+        const { 
+            screen,
+            remote
+        } = require("electron")
+
+        let winID = remote.getCurrentWindow().id
+
+        if (winID !== 1) {
+            document.body.innerHTML = ""
+        }
 
         const title = document.querySelector("#title")
         const titleSmall = document.querySelector("#small-title")
@@ -30,7 +39,7 @@
         const loader = document.querySelector("#spinner")
         const nameEnter = document.querySelector("#account-name")
         const passwordEnter = document.querySelector("#account-password")
-        const rootDir = "C:/NebulaeOS"
+        const rootDir = __dirname
 
         const promptLarge = ["Let's get started!", "Create an account.", "You're done!"]
         const promptSmall = ["Press any key to continue.", "Click create account when you're done.", "We're just going to restart, then it's all done."]

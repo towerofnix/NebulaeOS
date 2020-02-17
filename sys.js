@@ -37,7 +37,7 @@ const setup = () => {
          frame: false
       })
 
-      if (fs.existsSync("C:/NebulaeOS")) {
+      if (fs.existsSync(path.join(__dirname, "users"))) {
          win.loadURL(url.format({
             pathname: path.join(__dirname, 'ui/frame.htm'),
             protocol: 'file:',
