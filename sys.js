@@ -37,7 +37,7 @@ const setup = () => {
          frame: false
       })
 
-      if (fs.existsSync(path.join(__dirname, "users"))) {
+      if (fs.existsSync(path.join(__dirname, "/data/users.sys"))) {
          win.loadURL(url.format({
             pathname: path.join(__dirname, 'ui/frame.htm'),
             protocol: 'file:',

@@ -39,7 +39,7 @@
         const loader = document.querySelector("#spinner")
         const nameEnter = document.querySelector("#account-name")
         const passwordEnter = document.querySelector("#account-password")
-        const rootDir = __dirname
+        const rootDir = path.join(__dirname, "../")
 
         const promptLarge = ["Let's get started!", "Create an account.", "You're done!"]
         const promptSmall = ["Press any key to continue.", "Click create account when you're done.", "We're just going to restart, then it's all done."]
@@ -70,11 +70,6 @@
                         if (err) throw err
                     })
                     fs.mkdirSync(rootDir + "/users/"+nameEnter.value+"/USER_DATA", {
-                        recursive: true
-                    }, (err) => {
-                        if (err) throw err
-                    })
-                    fs.mkdirSync(rootDir + "/core", {
                         recursive: true
                     }, (err) => {
                         if (err) throw err
