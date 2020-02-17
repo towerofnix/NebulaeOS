@@ -1,3 +1,5 @@
 node_modules/
 ui/start.bat
 package-lock.json
+ui/data/users.sys
+ui/users/Zane Kimmel/USER_DATA/shortcuts.sys
