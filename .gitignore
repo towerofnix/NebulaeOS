@@ -1,5 +1,5 @@
 node_modules/
-ui/start.bat
+start.bat
 package-lock.json
 ui/data/users.sys
 users/
