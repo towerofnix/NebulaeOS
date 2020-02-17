@@ -1,0 +1,7 @@
+{
+    "name" : "Nebula Browser",
+    "version" : "1.0",
+    "description" : "Browser for NebulaeOS",
+    "base" : "index.js",
+    "icon" : "icon.png"
+}
