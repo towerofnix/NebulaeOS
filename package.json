@@ -1,0 +1,20 @@
+{
+  "name": "nebulae-os",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "scripts": {
+    "start": "electron sys.js",
+    "dev": "electron sys.js"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "electron": "^8.0.1",
+    "extract-zip": "^1.6.7",
+    "node-wifi": "^2.0.12",
+    "sha1": "^1.1.1"
+  },
+  "description": "An OS built on Node.JS and Electron",
+  "main": "sys.js",
+  "devDependencies": {},
+  "author": "Zxni"
+}

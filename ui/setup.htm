@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="res/setup.css" rel="stylesheet">
+</head>
+
+<body>
+    <h1 id="title">Let's get started!</h1>
+    <h3 id="small-title">Press any key to continue.</h3>
+
+    <div id="spinner"></div>
+
+    <div id="account-tab">
+        <input type="text" id="account-name" placeholder="New account name.">
+        <input type="password" id="account-password" placeholder="New password.">
+        <button id="account-create">Create</button>
+    </div>
+
+    <script>
+        const sha1 = require("sha1")
+        const fs = require("fs")
+        const path = require("path")
+        const { screen } = require("electron")
+
+        const title = document.querySelector("#title")
+        const titleSmall = document.querySelector("#small-title")
+        const accountTab = document.querySelector("#account-tab")
+        const createAccountButton = document.querySelector("#account-create")
+        const loader = document.querySelector("#spinner")
+        const nameEnter = document.querySelector("#account-name")
+        const passwordEnter = document.querySelector("#account-password")
+        const rootDir = "C:/NebulaeOS"
+
+        const promptLarge = ["Let's get started!", "Create an account.", "You're done!"]
+        const promptSmall = ["Press any key to continue.", "Click create account when you're done.", "We're just going to restart, then it's all done."]
+
+        let page = 0
+
+        document.documentElement.addEventListener("keydown", () => {
+            if (page + 1 === 1) {
+                accountTab.style.visibility = "visible"
+                page++
+                createAccountButton.addEventListener("click", () => {
+                    page++
+                    accountTab.style.visibility = "hidden"
+                    loader.style.visibility = "visible"
+                    fs.mkdirSync(rootDir + "/data", {
+                        recursive: true
+                    }, (err) => {
+                        if (err) throw err
+                    })
+                    fs.mkdirSync(rootDir + "/users", {
+                        recursive: true
+                    }, (err) => {
+                        if (err) throw err
+                    })
+                    fs.mkdirSync(rootDir + "/users/root/USER_DATA", {
+                        recursive: true
+                    }, (err) => {
+                        if (err) throw err
+                    })
+                    fs.mkdirSync(rootDir + "/users/"+nameEnter.value+"/USER_DATA", {
+                        recursive: true
+                    }, (err) => {
+                        if (err) throw err
+                    })
+                    fs.mkdirSync(rootDir + "/core", {
+                        recursive: true
+                    }, (err) => {
+                        if (err) throw err
+                    })
+                    fs.mkdirSync(rootDir + "/programs", {
+                        recursive: true
+                    }, (err) => {
+                        if (err) throw err
+                    })
+                    let d = new Date()
+                    fs.writeFileSync(rootDir + "/data/users.sys", JSON.stringify({
+                        users: [
+                            {
+                                name: nameEnter.value,
+                                role: "admin",
+                                password: sha1(passwordEnter.value),
+                                image: "file:" + path.join(__dirname,
+                                    'res/icons/default_user.png'),
+                                background: "file:" + path.join(__dirname,
+                                    'res/wallpapers/default_wallpaper.png'),
+                                show: true,
+                                lastSignin: d.getTime()
+                            },
+                            {
+                                name: "root",
+                                role: "admin",
+                                password: sha1("root"),
+                                image: "file:" + path.join(__dirname,
+                                    'res/icons/default_user.png'),
+                                background: "file:" + path.join(__dirname,
+                                    'res/wallpapers/default_wallpaper.png'),
+                                show: false,
+                                lastSignin: -1
+                            }
+                        ]
+                    }))
+
+                    fs.writeFileSync(rootDir + "/users/"+nameEnter.value+"/USER_DATA/shortcuts.sys", JSON.stringify([
+                        {
+                            name: "Nebula Browser",
+                            open: "NebulaBrowser"
+                        }
+                    ]))
+                    loader.style.visibility = "hidden"
+                    title.innerHTML = promptLarge[page]
+                    titleSmall.innerHTML = promptSmall[page]
+                })
+            }
+            title.innerHTML = promptLarge[page]
+            titleSmall.innerHTML = promptSmall[page]
+        })
+    </script>
+</body>
+
+</html>

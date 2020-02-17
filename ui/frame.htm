@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="res/login.css">
+    <link rel="stylesheet" href="res/fonts/all.css">
+</head>
+
+<body>
+    <div id="wallpaper">
+
+    </div>
+    <div id="user-select">
+
+    </div>
+    <div id="login-modal">
+        <img src="res/icons/default_user.png" id="user-pfp">
+        <h1>Welcome back, {_user}.</h1>
+        <div id="pass-box">
+            <input type="password" id="pass" placeholder="Password...">
+        </div>
+        <button id="signinbutton">Sign in as {_user}</button>
+    </div>
+
+    <script>
+        const sha1 = require("sha1")
+        const fs = require("fs")
+        const path = require("path")
+        const $ = require("jquery")
+        const wifi = require("node-wifi")
+
+        const {
+            remote
+        } = require("electron")
+
+        let special = document.body.querySelectorAll("h1,h2,h3,h4,h5,h6,p,a,span,button")
+        let currentUser = "unknown";
+
+        const rootFolder = "C:/NebulaeOS"
+        const users = JSON.parse(fs.readFileSync(rootFolder + "/data/users.sys"))
+        const passwordBox = document.body.querySelector("#pass")
+        const passwordButton = document.body.querySelector("#signinbutton")
+        const userIcon = document.body.querySelector("#user-pfp")
+        const root = document.documentElement
+        let desktopData;
+
+        const getLastUser = () => {
+            let prevUser = users.users[0]
+            for (let i = 0; i < users.users.length; i++) {
+                if (users.users[i].lastSignin > prevUser.lastSignin && users.users[i].show === true)
+                    prevUser = users.users[i]
+            }
+            return prevUser
+        }
+
+        let winID = remote.getCurrentWindow().id
+
+        if (winID !== 1) {
+            document.body.innerHTML = ""
+        }
+
+        currentUser = getLastUser()
+
+        userIcon.src = currentUser.image
+        root.style.setProperty("--user-wall", "url(" + currentUser.background.replace(/\\/g, "/") + ")")
+
+        passwordBox.focus()
+
+        passwordButton.addEventListener("click", () => {
+            if (sha1(passwordBox.value) === currentUser.password) {
+                let d = new Date()
+                currentUser.lastSignin = d.getTime()
+                fs.writeFileSync(rootFolder + "/data/users.sys", JSON.stringify(users))
+                $.ajax({
+                    url: path.join(__dirname, 'res/desktop.htm'),
+                    method: "GET",
+                    success: (data) => {
+                        desktopData = data
+                        $.ajax({
+                            url: path.join(__dirname, 'res/desktop.js'),
+                            method: "GET",
+                            success: (data) => {
+                                document.getElementsByTagName("html")[0].innerHTML = desktopData
+                                eval(data)
+                            }
+                        })
+                    }
+                })
+            }
+        })
+
+        for (let i = 0; i < special.length; i++) {
+            let userFirstName = currentUser.name.split(" ")[0]
+            special[i].innerText = special[i].innerText.replace("{_user}", userFirstName)
+        }
+    </script>
+</body>
+
+</html>
