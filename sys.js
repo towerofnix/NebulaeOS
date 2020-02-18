@@ -6,13 +6,16 @@ const url = require('url')
 const path = require('path')
 const colors = require('colors')
 const fs = require('fs')
-const sha1 = require('sha1')
 
 const setup = () => {
    let windows = []
    let screen = require("electron").screen
    let displays = screen.getAllDisplays()
-   //console.log(displays)
+
+   // Fix for https://github.com/electron/electron/issues/18397
+
+   app.allowRendererProcessReuse = true
+
    for (let i = 0; i < displays.length; i++) {
       let {
          width,
@@ -52,15 +55,27 @@ const setup = () => {
       }
 
       win.on('ready-to-show', () => {
-         win.show()
+         let ready = 0
+         win.ready = true
+         for (let i = 0; i < windows.length; i++) {
+            if (windows[i].ready) {
+               ready++
+               if (ready === windows.length) {
+                  for (let i = 0; i < windows.length; i++) {
+                     windows[i].show()
+                  }
+               }
+            }
+         }
       })
-      win.on('closed', function () {
+      win.on('closed', () => {
          win = null;
-      });
+      })
+
       win.setFullScreen(true)
 
       windows.push(win)
    }
 }
 
-app.on('ready', setup);
+app.on("ready", setup);
