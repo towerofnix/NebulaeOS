@@ -6,4 +6,4 @@ const win = toolkit.createWindow({
     title: "Nebula Browser"
 })
 
-win.loadURL("index.htm")
+win.loadURL(path.join(__dirname, "index.htm"))
