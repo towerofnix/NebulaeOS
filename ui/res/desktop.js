@@ -4,7 +4,6 @@ const extract = require("extract-zip")
 const {
     remote
 } = require("electron")
-const glob = require("glob")
 
 const timeDisplay = document.querySelector("#time")
 const dateDisplay = document.querySelector("#date")
@@ -12,7 +11,7 @@ const windowsContainer = document.querySelector("#windows")
 const programsDir = rootFolder + "/programs/"
 
 const desktop = {
-    uiVersion: "1.0",
+    uiVersion: "1.0.0",
     width: remote.getCurrentWindow().getBounds().width,
     height: remote.getCurrentWindow().getBounds().height,
     windows: [
@@ -81,6 +80,23 @@ const desktop = {
     },
     createShortcut: (name, icon) => {
         
+    },
+    requestAccess: (options) => {
+        const createPrompt = (req) => {
+            let finalMessage = options.friendlyName + " is requesting to access "
+            for (let i = 0; i < req.length; i++) {
+                finalMessage += req[i]
+            }
+            if (options.forever) finalMessage += " forever"
+            else finalMessage += " one time"
+            return finalMessage
+        }
+
+        let message = []
+        if (options.fs) message.push("the file system")
+        if (options.camera) message.push("the camera")
+        if (options.mic) message.push("the microphone")
+        createPrompt(message)
     }
 }
 
@@ -195,8 +211,18 @@ const loader = {
                     })
                     loader.runProgram(data, name, programInfo)
                 }
+            },
+            requestAccess: (type, forever) => {
+                let options = {
+                    fs: true,
+                    forever,
+                    type
+                }
+                desktop.requestAccess()
             }
         })
+
+        const fs = undefined
 
         try {
             eval(readData)
@@ -208,4 +234,3 @@ const loader = {
 
 getTime()
 getPrograms()
-runProgram("NebulaBrowser")
