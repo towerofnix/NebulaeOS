@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "license": "GPL-3.0",
   "scripts": {
-    "start": "electron sys.js",
-    "dev": "electron sys.js"
+    "start": "node start.js",
+    "dev": "node start.js"
   },
   "dependencies": {
+    "chalk": "^3.0.0",
     "colors": "^1.4.0",
     "electron": "^8.0.1",
     "extract-zip": "^1.6.7",
@@ -15,7 +16,7 @@
     "sha1": "^1.1.1"
   },
   "description": "An OS built on Node.JS and Electron",
-  "main": "sys.js",
+  "main": "start.js",
   "devDependencies": {},
   "author": "Zxni"
 }
