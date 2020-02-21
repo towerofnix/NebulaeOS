@@ -2,8 +2,187 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="res/login.css">
-    <link rel="stylesheet" href="res/fonts/all.css">
+    <style>
+        * {
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        @keyframes load {
+            from {
+                opacity: 0;
+                top: -100px;
+            }
+
+            to {}
+        }
+
+        :root {
+            --user-wall: "wallpapers/default_wallpaper.png";
+        }
+
+        :root,
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+        }
+
+        .hide-cursor {
+            cursor: none;
+        }
+
+        #wallpaper {
+            position: fixed;
+            top: -1%;
+            left: -1%;
+            width: 102%;
+            height: 102%;
+            background-size: cover;
+            background-image: var(--user-wall);
+            filter: blur(8px) brightness(0.5);
+        }
+
+        #login-modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 450px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: rgba(0, 0, 0, 0.308) 1px 0px 5px 1px;
+            animation: load 1s ease-out;
+        }
+
+        #login-modal h1 {
+            position: absolute;
+            white-space: wrap;
+            text-align: center;
+            width: 100%;
+            left: 50%;
+            transform: translate(-50%);
+            top: 25%;
+            color: black;
+            font-family: Helvetica, sans-serif;
+            font-weight: 5;
+        }
+
+        #pass-box {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+        }
+
+        #pass {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            font-size: 15px;
+            height: 25px;
+            padding: 10px;
+            border: 1px lightgray solid;
+            border-radius: 5px;
+        }
+
+        #pass:focus {
+            border: 2px skyblue solid;
+            box-shadow: skyblue 0px 0px 5px 1px;
+        }
+
+        #signinbutton {
+            position: absolute;
+            color: black;
+            border-radius: 5px;
+            border: 1px lightgray solid;
+            background-color: white;
+            padding: 15px;
+            width: 150px;
+            left: 50%;
+            top: 60%;
+            transform: translate(-50%);
+        }
+
+        #signinbutton:hover {
+            box-shadow: skyblue 0px 0px 5px 1px;
+            border: 1px skyblue solid;
+        }
+
+        #signinbutton:active {
+            background-color: lightgray;
+        }
+
+        #login-modal img {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: 25px;
+            left: 50%;
+            transform: translate(-50%);
+            border-radius: 50%;
+            box-shadow: rgba(0, 0, 0, 0.308) 0px 2px 5px 1px;
+            background-color: white;
+            border: 1px lightgrey solid;
+        }
+
+        #user-select {
+            position: fixed;
+            background-color: rgb(33, 34, 34);
+            box-shadow: rgba(0, 0, 0, 0.308) 1px 0px 5px 1px;
+            width: 250px;
+            min-height: 50px;
+            bottom: 75px;
+            left: 50px;
+        }
+
+        #load {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+        }
+
+        #load-background {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            top: 0px;
+            left: 0px;
+            background-color: darkgrey;
+        }
+
+        #mini-user-pfp {
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translate(-50%);
+            width: 15px;
+            height: 15px;
+        }
+
+        #username-mini {
+            position: absolute;
+            left: 25px;
+            width: calc(100%-25px);
+            height: 100%;
+        }
+
+        *:focus {
+            outline: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -57,6 +236,7 @@
 
         if (winID !== 1) {
             document.body.innerHTML = ""
+            document.body.className = "hide-cursor"
         }
 
         currentUser = getLastUser()
@@ -80,7 +260,7 @@
                             url: path.join(__dirname, 'res/desktop.js'),
                             method: "GET",
                             success: (data) => {
-                                document.getElementsByTagName("html")[0].innerHTML = desktopData
+                                root.innerHTML = desktopData
                                 eval(data)
                             }
                         })

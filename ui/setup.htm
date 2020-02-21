@@ -2,7 +2,136 @@
 <html>
 
 <head>
-    <link href="res/setup.css" rel="stylesheet">
+    <style>
+        * {
+            user-select: none;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        :root,
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background-color: white;
+            color: black;
+        }
+
+        #title {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 35px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 600;
+            margin: 15px;
+        }
+
+        #small-title {
+            position: fixed;
+            top: 75px;
+            left: 15px;
+            font-size: 25px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 100;
+            margin: 0px 15px;
+        }
+
+        #account-name,
+        #account-password {
+            position: fixed;
+            left: 50%;
+            top: 10%;
+            transform: translate(-50%, 0%);
+            width: 80%;
+            font-size: 15px;
+            height: 25px;
+            padding: 10px;
+            border: 1px lightgray solid;
+            border-radius: 5px;
+        }
+
+        #account-password {
+            top: 35%;
+        }
+
+        #account-name:focus,
+        #account-password:focus {
+            border: 2px skyblue solid;
+            box-shadow: skyblue 0px 0px 5px 1px;
+        }
+
+        #account-tab {
+            position: fixed;
+            top: 50%;
+            right: 20%;
+            transform: translate(0%, -50%);
+            height: 350px;
+            width: 350px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px lightgrey;
+            box-shadow: lightgray 0 0 5px 2px;
+            visibility: hidden;
+        }
+
+        #account-create {
+            position: absolute;
+            color: black;
+            border-radius: 5px;
+            border: 1px lightgray solid;
+            background-color: white;
+            padding: 15px;
+            width: 150px;
+            left: 50%;
+            top: 70%;
+            transform: translate(-50%);
+        }
+
+        #account-create:hover {
+            box-shadow: skyblue 0px 0px 5px 1px;
+            border: 1px skyblue solid;
+        }
+
+        #account-create:active {
+            background-color: lightgray;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg) translate(-50%, -50%);
+            }
+
+            100% {
+                transform: rotate(360deg) translate(-50%, -50%);
+            }
+        }
+
+        #spinner {
+            position: fixed;
+            visibility: hidden;
+            transform-origin: left top;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            transform: translate(-50%, -50%);
+            border-style: none;
+            border-width: 5px;
+            border-bottom-style: solid;
+            border-color: skyblue;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,7 +150,7 @@
         const sha1 = require("sha1")
         const fs = require("fs")
         const path = require("path")
-        const { 
+        const {
             screen,
             remote
         } = require("electron")
@@ -42,7 +171,9 @@
         const rootDir = path.join(__dirname, "../")
 
         const promptLarge = ["Let's get started!", "Create an account.", "You're done!"]
-        const promptSmall = ["Press any key to continue.", "Click create account when you're done.", "We're just going to restart, then it's all done."]
+        const promptSmall = ["Press any key to continue.", "Click create account when you're done.",
+            "We're just going to restart, then it's all done."
+        ]
 
         let page = 0
 
@@ -69,7 +200,7 @@
                     }, (err) => {
                         if (err) throw err
                     })
-                    fs.mkdirSync(rootDir + "/users/"+nameEnter.value+"/USER_DATA", {
+                    fs.mkdirSync(rootDir + "/users/" + nameEnter.value + "/USER_DATA", {
                         recursive: true
                     }, (err) => {
                         if (err) throw err
@@ -81,8 +212,7 @@
                     })
                     let d = new Date()
                     fs.writeFileSync(rootDir + "/data/users.sys", JSON.stringify({
-                        users: [
-                            {
+                        users: [{
                                 name: nameEnter.value,
                                 role: "admin",
                                 password: sha1(passwordEnter.value),
@@ -107,12 +237,11 @@
                         ]
                     }))
 
-                    fs.writeFileSync(rootDir + "/users/"+nameEnter.value+"/USER_DATA/shortcuts.sys", JSON.stringify([
-                        {
+                    fs.writeFileSync(rootDir + "/users/" + nameEnter.value + "/USER_DATA/shortcuts.sys",
+                        JSON.stringify([{
                             name: "Nebula Browser",
                             open: "NebulaBrowser"
-                        }
-                    ]))
+                        }]))
                     loader.style.visibility = "hidden"
                     title.innerHTML = promptLarge[page]
                     titleSmall.innerHTML = promptSmall[page]
